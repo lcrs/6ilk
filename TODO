@@ -1,0 +1,4 @@
+o Scrolling on edges is broken under WindowMaker because of the window border... bodged it by moving the window left and up a pixel
+o Whiteness on the grid when you stop sampling
+o You have to pass the path to the clips folder as argv[1] with a trailing /
+o Using absolute-mode Wacom means scrolling past end of clip doesn't wrap like it does with a mouse
