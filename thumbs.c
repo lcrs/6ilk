@@ -128,7 +128,7 @@ void makeThumb(char *path, uint32_t *texture) {
 	AVCodecContext		*cctx;
 	AVCodec			*c;
 	AVFrame			*f;
-	AVPacket		*p;
+	AVPacket		p;
 	uint8_t			stream, i;
 	int32_t			worked;
 	uint32_t		ytex, cbtex, crtex;
@@ -144,18 +144,18 @@ void makeThumb(char *path, uint32_t *texture) {
 	glPrint(path);
 
 	/* Regular ffmpeg setup and single frame-decode */
-	av_open_input_file(&fctx, path, NULL, 0, NULL);
-	av_find_stream_info(fctx);
+	avformat_open_input(&fctx, path, NULL, NULL);
+	avformat_find_stream_info(fctx, NULL);
 	for(i = 0; i < fctx->nb_streams; i++) {
-		if(fctx->streams[i]->codec->codec_type == CODEC_TYPE_VIDEO) {
+		if(fctx->streams[i]->codec->codec_type == AVMEDIA_TYPE_VIDEO) {
 			stream = i;
 			break;
 		}
 	}
 	cctx = fctx->streams[stream]->codec;
 	c = avcodec_find_decoder(cctx->codec_id);
-	avcodec_open(cctx, c);
-	p = av_malloc(sizeof(AVPacket));
+	avcodec_open2(cctx, c, NULL);
+	av_init_packet(&p);
 	f = avcodec_alloc_frame();
 	
 	planeHeight[0] = cctx->height;
@@ -171,9 +171,9 @@ void makeThumb(char *path, uint32_t *texture) {
 		av_seek_frame(fctx, stream, rand() % fctx->duration / 40000, 0);
 	}
 	do {
-		av_read_frame(fctx, p);
-	} while(p->stream_index != stream);
-	avcodec_decode_video(cctx, f, &worked, p->data, p->size);
+		av_read_frame(fctx, &p);
+	} while(p.stream_index != stream);
+	avcodec_decode_video2(cctx, f, &worked, &p);
 
 	/* Draw frame to back buffer */
 	glSetupColourspaceConversion();
@@ -224,11 +224,10 @@ void makeThumb(char *path, uint32_t *texture) {
 
 	glXSwapBuffers(globals.dpy, globals.win);
 
-	av_free_packet(p);
+	av_free_packet(&p);
 	av_free(f);
-	av_free(p);
 	avcodec_close(cctx);
-	av_close_input_file(fctx);
+	avformat_close_input(&fctx);
 	
 	glDeleteTextures(1, &ytex);
 	glDeleteTextures(1, &cbtex);

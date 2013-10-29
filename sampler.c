@@ -119,7 +119,7 @@ uint8_t samplerOverClip(enum over_t o) {
 }
 
 /* Called from the render loop to paint input monitor */
-/* FIXME: PAL DV frame size / dimesions / pixel format hardcoded in here */
+/* FIXME: PAL DV frame size / dimensions / pixel format hardcoded in here */
 void samplerRender(void) {
 	int32_t			worked;
 	uint16_t		x, y, w, h;
@@ -130,7 +130,7 @@ void samplerRender(void) {
 		return;
 	}
 	
-	avcodec_decode_video(state.sampler.cctx, state.sampler.frame, &worked, state.sampler.dvFrame, 144000);
+	avcodec_decode_video2(state.sampler.cctx, state.sampler.frame, &worked, &state.sampler.packet);
 		
 	/* Paint YCbCr straight through fragment program to back buffer, no render-to-texture like the other channels */
 	glActiveTexture(GL_TEXTURE0);
@@ -316,9 +316,12 @@ void samplerInit(void) {
 	
 	state.sampler.frame = avcodec_alloc_frame();
 	codec = avcodec_find_decoder(CODEC_ID_DVVIDEO);
-	state.sampler.cctx = avcodec_alloc_context();
+	state.sampler.cctx = avcodec_alloc_context3(codec);
 	
-	avcodec_open(state.sampler.cctx, codec);
+	avcodec_open2(state.sampler.cctx, codec, NULL);
+	av_init_packet(&state.sampler.packet);
+	state.sampler.packet.size = 144000; /* PAL DV frame size in bytes */
+	state.sampler.packet.data = state.sampler.dvFrame;
 		
 	glGenTextures(1, &state.sampler.ytex);
 	glBindTexture(GL_TEXTURE_RECTANGLE_NV, state.sampler.ytex);
@@ -354,4 +357,6 @@ void samplerUninit(void) {
 	
 	sem_destroy(&state.sampler.start);
 	sem_destroy(&state.sampler.stop);
+
+	av_free_packet(&state.sampler.packet);
 }

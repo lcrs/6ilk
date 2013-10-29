@@ -1,5 +1,3 @@
-#define _ISOC99_SOURCE
-
 #include <unistd.h>
 #include <pthread.h>
 #include <semaphore.h>
@@ -16,13 +14,12 @@
 
 #include <sys/time.h>
 
-#define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #include <GL/glext.h>
 #include <GL/glx.h>
 
-#include <ffmpeg/avformat.h>
-#include <ffmpeg/avcodec.h>
+#include <libavformat/avformat.h>
+#include <libavcodec/avcodec.h>
 
 #include <libiec61883/iec61883.h>
 
@@ -135,17 +132,18 @@ struct sampler_t {
 	
 	uint8_t		doneFirst;		/* Okay to decode sampler frames, first one has been written - nessecary so codec doesn't read a frame full of crap the first time! */
 	
-	AVCodecContext	*cctx;			/* DV decoder for its input window */
+	AVCodecContext	*cctx;		/* DV decoder for its input window */
 	AVFrame		*frame;			/* YCbCr frame output buffer */
+	AVPacket	packet;			/* Packet which will hold raw DV data to decode */
 	uint32_t	ytex;			/* Output textures */
 	uint32_t	cbtex;
 	uint32_t	crtex;
 	
-	uint32_t	fd;			/* File descriptor being written to, 0 if none */
+	uint32_t	fd;				/* File descriptor being written to, 0 if none */
 	char		*path;			/* Path of file being written */
 	uint16_t	recLen;			/* Length of current record in frames */
 	
-	pthread_mutex_t writeMutex;		/* Serialise write() in samplerCallback() and close() in samplerStop() */
+	pthread_mutex_t writeMutex;	/* Serialise write() in samplerCallback() and close() in samplerStop() */
 	
 	uint8_t		thumbToAdd;		/* If we need to generate a thumbnail for a just-recorded clip */
 };

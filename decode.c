@@ -29,7 +29,7 @@ void decode(void *v) {
 	AVCodecContext		*cctx;
 	AVCodec			*codec;
 	AVFrame			*frame;
-	AVPacket		*packet;
+	AVPacket		packet;
 /*	struct sched_param	param; */
 	
 	/* Set a low priority while we set up and buffer */
@@ -43,6 +43,7 @@ void decode(void *v) {
 	s = clipGet(channel, clip);
 	
 	/* If it would take too long/too much memory to buffer, don't */
+	/* FIXME: pass buffersize to av_open_input or whatever */
 	if(s->size > 50 * 1024 * 1024) {
 		bufferSize = 0;
 	} else {
@@ -51,28 +52,27 @@ void decode(void *v) {
 	
 	/* ffmpeg setup */
 	pthread_testcancel();
-	r = av_open_input_file(&fctx, s->path, NULL, bufferSize, NULL);
+	r = avformat_open_input(&fctx, s->path, NULL, NULL);
 	pthread_testcancel();
 	if(r) {
-		printf("av_open_input_file() returned %d\n", r);
+		printf("avformat_open_input() returned %d\n", r);
 		exit(1);
 	}
-	av_find_stream_info(fctx);
+	avformat_find_stream_info(fctx, NULL);
 	for(i = 0; i < fctx->nb_streams; i++) {
-		if(fctx->streams[i]->codec->codec_type == CODEC_TYPE_VIDEO) {
+		if(fctx->streams[i]->codec->codec_type == AVMEDIA_TYPE_VIDEO) {
 			stream = i;
 			break;
 		}
 	}
 	cctx = fctx->streams[stream]->codec;
 	codec = avcodec_find_decoder(cctx->codec_id);
-	avcodec_open(cctx, codec);
-	packet = av_mallocz(sizeof(AVPacket));
+	avcodec_open2(cctx, codec, NULL);
 	frame = avcodec_alloc_frame();
+	av_init_packet(&packet);
 			
-	pthread_cleanup_push((void *)av_close_input_file, (void *)fctx);
+	pthread_cleanup_push((void *)avformat_close_input, (void *)fctx);
 	pthread_cleanup_push((void *)avcodec_close, (void *)cctx);
-	pthread_cleanup_push((void *)av_free, (void *)packet);
 	pthread_cleanup_push((void *)av_free, (void *)frame);
 	
 	/* Update state */
@@ -117,11 +117,11 @@ void decode(void *v) {
 		}
 		
 		do {
-			av_read_frame(fctx, packet);
-		} while(packet->stream_index != stream);
+			av_read_frame(fctx, &packet);
+		} while(packet.stream_index != stream);
 		
-		pthread_cleanup_push((void *)av_free_packet, (void *)packet);
-		avcodec_decode_video(cctx, frame, &worked, packet->data, packet->size);
+		pthread_cleanup_push((void *)av_free_packet, (void *)&packet);
+		avcodec_decode_video2(cctx, frame, &worked, &packet);
 		pthread_cleanup_pop(1);
 		
 		state.channels[channel].frameToTexture = frame;
@@ -130,7 +130,6 @@ void decode(void *v) {
 	}
 	
 	/* Never gets here, but these are nessecary because pthread_cleanup_push() above is a nasty macro */
-	pthread_cleanup_pop(0);
 	pthread_cleanup_pop(0);
 	pthread_cleanup_pop(0);
 	pthread_cleanup_pop(0);
