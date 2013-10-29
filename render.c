@@ -248,7 +248,7 @@ void render(void *dontcare) {
 		renderStatDraw(drawDelta);
 		renderStatSwap(swapDelta);
 		renderStatScale();
-				
+
 		/* Populate renderClips array, set to NULL if no clip to render */
 		pthread_mutex_lock(&globals.channelsMutex);
 		for(i = 0; i < 3; i++) {
@@ -307,10 +307,12 @@ void render(void *dontcare) {
 		}
 		
 		/* Wait a bit longer to ensure swap doesn't happen during first field time */
-		sleepyTime.tv_sec = 0;
-		sleepyTime.tv_nsec = 40000000 - drawDelta;
-		nanosleep(&sleepyTime, NULL);
-		
+		if(drawDelta < 20000000) {
+			sleepyTime.tv_sec = 0;
+			sleepyTime.tv_nsec = 20000000 - drawDelta;
+			nanosleep(&sleepyTime, NULL);
+		}
+
 		glXSwapBuffers(globals.dpy, globals.win);
 		
 		/* Record time after swap */

@@ -73,7 +73,7 @@ void guiInit(void) {
 	swa.colormap = cmap;
 	swa.border_pixel = 0;
 	swa.event_mask = StructureNotifyMask | ButtonPressMask | ButtonReleaseMask | KeyPressMask | KeyReleaseMask | ExposureMask | PointerMotionMask;
-	globals.win = XCreateWindow(globals.dpy, RootWindow(globals.dpy, xvi->screen), 64, 64, 1440, 900, 0, xvi->depth, InputOutput, xvi->visual, CWBorderPixel|CWColormap|CWEventMask, &swa);
+	globals.win = XCreateWindow(globals.dpy, RootWindow(globals.dpy, xvi->screen), 128, 64, 1440, 900, 0, xvi->depth, InputOutput, xvi->visual, CWBorderPixel|CWColormap|CWEventMask, &swa);
 	ctx = glXCreateContext(globals.dpy, xvi, 0, GL_TRUE);
 	
 	XFree(xvi);
@@ -91,7 +91,7 @@ void guiInit(void) {
 	glXMakeCurrent(globals.dpy, globals.win, ctx);
 
 	/* Force the window to be really fullscreen */
-	XMoveResizeWindow(globals.dpy, globals.win, 64, 64, 1440, 900);
+	XMoveResizeWindow(globals.dpy, globals.win, 128, 64, 1440, 900);
 
 	/* Basic GL setup */
 	glOrtho(0.0, 1440.0, 900.0, 0.0, -1.0, 1.0);
@@ -112,34 +112,44 @@ void guiUninit(void) {
 
 /* Thread entry point - main event loop */
 void gui(void *dontcare) {
-	XEvent			event;
-/*	struct sched_param	param; */
-	
+	XEvent		event;
+	fd_set		fds;
+
+
 	/* Set a lowish priority */
-	/* param.sched_priority = 3;
+/*	struct sched_param	param; 
+	param.sched_priority = 3;
 	pthread_setsched	pthread_self(), SCHED_FIFO, &param); */
 
 	for(;;) {
-		XNextEvent(globals.dpy, &event);
-		switch(event.type) {
-			case ButtonPress:
-				handleButtonPress(&event);
-				break;
-			case ButtonRelease:
-				handleButtonRelease(&event);
-				break;
-			case KeyPress:
-				handleKeyPress(&event);
-				break;
-			case KeyRelease:
-				handleKeyRelease(&event);
-				break;
-			case MotionNotify:
-				handleMotion(&event);
-				break;
-			case Expose:
-				handleExpose(&event);
-				break;
+		/* We have to use select() here because of a bug in xcb which 
+		   prevents glXSwapBuffers() running in another thread whilst we
+		   are blocked in XNextEvent() */
+		FD_ZERO(&fds);
+		FD_SET(ConnectionNumber(globals.dpy), &fds);
+		select(ConnectionNumber(globals.dpy)+1, &fds, NULL, NULL, NULL);
+		while(XPending(globals.dpy)) {
+			XNextEvent(globals.dpy, &event);
+			switch(event.type) {
+				case ButtonPress:
+					handleButtonPress(&event);
+					break;
+				case ButtonRelease:
+					handleButtonRelease(&event);
+					break;
+				case KeyPress:
+					handleKeyPress(&event);
+					break;
+				case KeyRelease:
+					handleKeyRelease(&event);
+					break;
+				case MotionNotify:
+					handleMotion(&event);
+					break;
+				case Expose:
+					handleExpose(&event);
+					break;
+			}
 		}
 	}
 }
