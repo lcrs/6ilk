@@ -8,7 +8,7 @@ void guiDrawAll(void) {
 	clipsDraw(0);
 	clipsDraw(1);
 	clipsDraw(2);
-	pthread_mutex_unlock(&globals.channelsMutex);	
+	pthread_mutex_unlock(&globals.channelsMutex);
 }
 
 /* For glPrint() */
@@ -73,17 +73,17 @@ void guiInit(void) {
 	swa.colormap = cmap;
 	swa.border_pixel = 0;
 	swa.event_mask = StructureNotifyMask | ButtonPressMask | ButtonReleaseMask | KeyPressMask | KeyReleaseMask | ExposureMask | PointerMotionMask;
-	globals.win = XCreateWindow(globals.dpy, RootWindow(globals.dpy, xvi->screen), 0, 0, 1440, 900, 0, xvi->depth, InputOutput, xvi->visual, CWBorderPixel|CWColormap|CWEventMask, &swa);
+	globals.win = XCreateWindow(globals.dpy, RootWindow(globals.dpy, xvi->screen), 64, 64, 1440, 900, 0, xvi->depth, InputOutput, xvi->visual, CWBorderPixel|CWColormap|CWEventMask, &swa);
 	ctx = glXCreateContext(globals.dpy, xvi, 0, GL_TRUE);
 	
 	XFree(xvi);
 
 	/* Request no window decorations */
-        mwmHintsAtom = XInternAtom(globals.dpy, "_MOTIF_WM_HINTS", 0);
-        mwmHints.flags = MWM_HINTS_FUNCTIONS | MWM_HINTS_DECORATIONS;
-        mwmHints.functions = 0;
-        mwmHints.decorations = 0;
-        XChangeProperty(globals.dpy, globals.win, mwmHintsAtom, mwmHintsAtom, 32, PropModeReplace, (unsigned char *)&mwmHints, 4);
+	mwmHintsAtom = XInternAtom(globals.dpy, "_MOTIF_WM_HINTS", 0);
+	mwmHints.flags = MWM_HINTS_FUNCTIONS | MWM_HINTS_DECORATIONS;
+	mwmHints.functions = 0;
+	mwmHints.decorations = 0;
+	XChangeProperty(globals.dpy, globals.win, mwmHintsAtom, mwmHintsAtom, 32, PropModeReplace, (unsigned char *)&mwmHints, 4);
 	
 	/* Show the window, wait for it to appear and activate the context */
 	XMapWindow(globals.dpy, globals.win);
@@ -91,7 +91,7 @@ void guiInit(void) {
 	glXMakeCurrent(globals.dpy, globals.win, ctx);
 
 	/* Force the window to be really fullscreen */
-        XMoveResizeWindow(globals.dpy, globals.win, -1, -1, 1440, 900);
+	XMoveResizeWindow(globals.dpy, globals.win, 64, 64, 1440, 900);
 
 	/* Basic GL setup */
 	glOrtho(0.0, 1440.0, 900.0, 0.0, -1.0, 1.0);
@@ -150,9 +150,9 @@ void cursorHide(void) {
 	Pixmap			zilch;
 	XColor			black;
 	char			nothing[] = {0, 0, 0, 0,
-				             0, 0, 0, 0,
-					     0, 0, 0, 0,
-				             0, 0, 0, 0};
+					             0, 0, 0, 0,
+					             0, 0, 0, 0,
+					             0, 0, 0, 0};
 					     
 	black.red = 0;
 	black.green = 0;

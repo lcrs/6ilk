@@ -38,7 +38,7 @@ struct mwmHints_t {
 /* The various things the mouse can be over - add to the END of this struct, the raw ints are used sometimes! */
 enum over_t {
 	nothing,	/* Nothing in particular */
-	tx,		/* The big output window */
+	tx,			/* The big output window */
 	folders,	/* The row of clip folders */
 	grid,		/* The grid of clips */
 	foldersSwipe,	/* The top of the window above the folders, for scrolling */
@@ -59,7 +59,7 @@ struct folder_t {
 	char		*name;			/* Folder name */
 	uint32_t	texture;		/* Texture containing thumbnail */
 	uint16_t	fileCount;		/* Number of files in folder */
-	struct file_t	*files;			/* Dynamic array of files */
+	struct file_t	*files;		/* Dynamic array of files */
 };
 
 /* File (clip in grid body) metadata */
@@ -71,40 +71,40 @@ struct file_t {
 
 /* Clip (on channel) metadata */
 struct clip_t {
-	struct clip_t	*next;			/* Pointer to next clip, NULL if last */
+	struct clip_t	*next;		/* Pointer to next clip, NULL if last */
 	char		*path;			/* Path to clip file */
 	uint32_t	size;			/* Clip size on disk in bytes */
-	uint16_t	planeWidth[3];		/* Width of image planes */
-	uint16_t	planeHeight[3];		/* Height of image planes */
+	uint16_t	planeWidth[3];	/* Width of image planes */
+	uint16_t	planeHeight[3];	/* Height of image planes */
 	uint32_t	texture;		/* Texture containing thumbnail */
 	pthread_t	thread;			/* Decode thread */
 	uint8_t		ready;			/* 1 if contexts have been set up and decoding can begin */
 	uint32_t	length;			/* Clip length in frames */
 	float		fps;			/* Frames per second we're playing at */
 	float		multiplier;		/* Speed by n times */
-	float		in;			/* In point */
+	float		in;				/* In point */
 	float		out;			/* Out point */
-	sem_t		decodeReady;		/* Decode thread waits on this semaphore for each frame decode */
-	sem_t		decodeComplete;		/* Draw thread waits on this semaphore while decoding is done */
+	sem_t		decodeReady;	/* Decode thread waits on this semaphore for each frame decode */
+	sem_t		decodeComplete;	/* Draw thread waits on this semaphore while decoding is done */
 };
 
 /* Per-channel animatable attributes which together make a key - add to END, these get indexed as an array of floats! */
 struct key_t {
-	const float 	shim;			/* 0th index when used as array - allows index 0 to be used to mean "false" */
+	const float shim;			/* 0th index when used as array - allows index 0 to be used to mean "false" */
 	float		pos;			/* Position in clip, from 0.0 (begining) to 1.0 (end) */
 	float		opacity;		/* Opacity in mix - 1.0 is fully opaque, 0.0 fully transparent */
 };
 
 /* Channel */
 struct channel_t {
-	struct clip_t	*clips;			/* Linked list of clips, NULL if empty */
+	struct clip_t	*clips;		/* Linked list of clips, NULL if empty */
 	uint8_t		clipCount;		/* Number of clips on channel */
 	uint8_t		current;		/* Currently playing clip index */
-	struct clip_t	*currentClip;		/* Pointer to the currently playing clip */
+	struct clip_t	*currentClip;	/* Pointer to the currently playing clip */
 	uint32_t	ytex, cbtex, crtex;	/* Textures to which video planes are output to by decode thread */
 	uint32_t	rgbtex;			/* Texture to which complete video frame is output by renderChannels() in render thread */
 	uint32_t	lut;			/* YCbCr to RGB LUT 3D texture */
-	struct clip_t	**deletions;		/* Dynamic array of pointers to dead clips to be freed */
+	struct clip_t	**deletions;	/* Dynamic array of pointers to dead clips to be freed */
 	uint8_t		deletionsCount;		/* Number of clips to be freed */
 	
 	AVFrame		*frameToTexture;	/* Pointer to frame to upload into texture */
@@ -151,7 +151,7 @@ struct sampler_t {
 /* State vector */
 struct state_t {
 	uint8_t		dirty;			/* If we need to redraw */
-	uint8_t		currentFolder;		/* Index of current folder in grid */
+	uint8_t		currentFolder;	/* Index of current folder in grid */
 	
 	int8_t		folderScrollOffset;	/* How many folders we have scrolled along */
 	int8_t		gridScrollOffset;	/* How many rows of clips we have scrolled down */
@@ -163,18 +163,18 @@ struct state_t {
 	enum over_t	over;			/* What the mouse is currently over - see enum definition above */
 	enum over_t	overPrev;		/* What the mouse has just left */
 	uint8_t		overSub;		/* Further information about what the mouse is over - index of folder (or clip) position */
-	uint8_t		overSubPrev;		/* Further inormation about what we used to be over */
+	uint8_t		overSubPrev;	/* Further inormation about what we used to be over */
 		
-        struct channel_t channels[3];		/* Our 3 video playback channels */	
-        struct channel_t prev[3];		/* Our 3 video playback channels as they were in the previous frame */
+	struct channel_t channels[3];	/* Our 3 video playback channels */	
+	struct channel_t prev[3];		/* Our 3 video playback channels as they were in the previous frame */
 	
 	uint32_t	count;			/* Increments every frame */
 	
-	struct sampler_t sampler;		/* Sampler-related state */
+	struct sampler_t sampler;	/* Sampler-related state */
 	
 	double		lastTap;		/* Timestamp of last tap */
 	double		taps[8];		/* Last 8 valid tempo tap times */
-	uint8_t		latestTapIndex;		/* Index of last tap */
+	uint8_t		latestTapIndex;	/* Index of last tap */
 	double		tempo;			/* Current average beat time */
 };
 extern struct state_t state;
@@ -186,22 +186,22 @@ struct globals_t {
 	sem_t		initSem;		/* Semaphore which blocks main() until render thread init done  */
 	sem_t		exitSem;		/* Semaphore which blocks main() before uninit */
 	
-	uint8_t		folderCount;		/* Number of top level folders */
-	struct folder_t	*folders;		/* Dynamic array of folders */
+	uint8_t		folderCount;	/* Number of top level folders */
+	struct folder_t	*folders;	/* Dynamic array of folders */
 
 	Display		*dpy;			/* X11 connection */
 	Window		win;			/* X11 drawable */
 	
-	uint8_t		fontListBase;		/* Index of the display list where our font starts */
+	uint8_t		fontListBase;	/* Index of the display list where our font starts */
 	uint8_t		*fontCharWidths;	/* Array containing pixel widths of each character in our font */
 	
 	float		defaultlut[8][8][8][3]; /* Normal YCbCr to RGB LUT */
 	uint32_t	lut;			/* Normal YCbCr to RGB LUT 3D texture */
-	char		*ycbcrtorgb;		/* YCbCr to RGB fragment program */
+	char		*ycbcrtorgb;	/* YCbCr to RGB fragment program */
 	
 	pthread_mutex_t	glMutex;		/* To serialise GL drawing to prevent calling GL recursively */
-	pthread_mutex_t	deletionMutex;		/* Exclusive channel dead clips array lock */
-	pthread_mutex_t channelsMutex;		/* Exclusive channel clips array lock */
+	pthread_mutex_t	deletionMutex;	/* Exclusive channel dead clips array lock */
+	pthread_mutex_t channelsMutex;	/* Exclusive channel clips array lock */
 };
 extern struct globals_t globals;
 

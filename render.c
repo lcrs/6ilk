@@ -202,9 +202,9 @@ void renderTx(struct clip_t **renderClips) {
 /* Thread entry point */
 void render(void *dontcare) {
 	uint8_t			i;
-	struct clip_t		*renderClips[3];	/* Clips to render for each channel */
+	struct clip_t	*renderClips[3];	/* Clips to render for each channel */
 /*	struct sched_param	param; */
-	struct timespec		start, afterDraw, afterSwap, sleepyTime;
+	struct timespec	start, afterDraw, afterSwap, sleepyTime;
 	double			drawDelta, swapDelta;
 	
 	/* Make sure that when we are cancelled we quit immediately - the clip structs and stuff disappear in short order */

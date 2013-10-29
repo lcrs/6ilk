@@ -8,7 +8,7 @@ struct state_t state;
 
 int main(int argc, char **argv) {
 	pthread_t		guiThread, renderThread, samplerThread;
-	pthread_attr_t		guiAttrs, renderAttrs, samplerAttrs;
+	pthread_attr_t	guiAttrs, renderAttrs, samplerAttrs;
 	int32_t			r;
 	struct	timespec	s;
 

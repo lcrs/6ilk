@@ -133,17 +133,17 @@ void drawInit(void) {
 	uint8_t		i, j, k;
 	float		y, cb, cr;
 	char 		fragProg[] = "!!ARBfp1.0\n\
-	                              TEMP ycbcr;\n\
-				      TEMP rgb;\n\
-				      PARAM scale = { 0.8032226, 0.875, 0.875, 1.0 };\n\
-				      TEX ycbcr.r, fragment.texcoord[0], texture[0], RECT;\n\
-			              TEX ycbcr.g, fragment.texcoord[1], texture[1], RECT;\n\
-			              TEX ycbcr.b, fragment.texcoord[2], texture[2], RECT;\n\
-			              MUL ycbcr, ycbcr, scale;\n\
-			              TEX rgb, ycbcr, texture[3], 3D;\n\
-				      MUL result.color, rgb, fragment.color;\n\
-				      END";
-	
+				              TEMP ycbcr;\n\
+				              TEMP rgb;\n\
+				              PARAM scale = { 0.8032226, 0.875, 0.875, 1.0 };\n\
+				              TEX ycbcr.r, fragment.texcoord[0], texture[0], RECT;\n\
+				              TEX ycbcr.g, fragment.texcoord[1], texture[1], RECT;\n\
+				              TEX ycbcr.b, fragment.texcoord[2], texture[2], RECT;\n\
+				              MUL ycbcr, ycbcr, scale;\n\
+				              TEX rgb, ycbcr, texture[3], 3D;\n\
+				              MUL result.color, rgb, fragment.color;\n\
+				              END";
+
 	/* YCbCR to RGB fragment program */
 	globals.ycbcrtorgb = malloc(strlen(fragProg) + 1);
 	strcpy(globals.ycbcrtorgb, fragProg);
