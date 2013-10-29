@@ -16,7 +16,7 @@ void fontInit(void) {
 	XFontStruct		*font;
 	uint16_t		first, last, total, i;
 
-	font = XLoadQueryFont(globals.dpy, "-adobe-helvetica-medium-r-normal-*-12-*-*-*-*-*-iso8859-1");
+	font = XLoadQueryFont(globals.dpy, "-*-*-medium-r-*-sans-12-*-*-*-*-*-*-*");
 	first = font->min_char_or_byte2;
 	last = font->max_char_or_byte2;
 	total = last - first + 1;
