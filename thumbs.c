@@ -124,7 +124,7 @@ void fakeThumb(char *path, uint32_t *texture) {
 
 /* Decode first frame of path and put into texture */
 void makeThumb(char *path, uint32_t *texture) {
-	AVFormatContext		*fctx;
+	AVFormatContext		*fctx = NULL;
 	AVCodecContext		*cctx;
 	AVCodec			*c;
 	AVFrame			*f;
@@ -274,7 +274,7 @@ void thumbsInit(void) {
 	/* Sort folders array */
 	qsort(globals.folders, globals.folderCount, sizeof(struct folder_t), folderCompare);
 
-	/* For each folder, create it's thumbnail and handle its files */
+	/* For each folder, create its thumbnail and handle its files */
 	for(i = 0; i < globals.folderCount; i++) {
 		f = &globals.folders[i];
 

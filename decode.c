@@ -19,23 +19,25 @@ uint8_t isIntra(AVCodecContext *c) {
 /* Video decode threads entry point */
 void decode(void *v) {
 	uint8_t			channel, clip;
-	struct clip_t		*s;
+	struct clip_t	*s;
 	uint8_t			i;
 	uint32_t		r;
 	uint8_t			stream;
-	int32_t		worked;
+	int32_t			worked;
 	uint32_t		bufferSize;
-	AVFormatContext		*fctx;
-	AVCodecContext		*cctx;
+	AVFormatContext	*fctx = NULL;
+	AVCodecContext	*cctx;
 	AVCodec			*codec;
 	AVFrame			*frame;
 	AVPacket		packet;
-/*	struct sched_param	param; */
+/*
+	struct sched_param	param; */
 	
 	/* Set a low priority while we set up and buffer */
 	/* param.sched_priority = 1;
-	pthread_setschedparam(pthread_self(), SCHED_FIFO, &param); */
-	
+	pthread_setschedparam(pthread_self(), SCHED_FIFO, &param);
+*/
+
 	channel = ((uint8_t *)v)[0];
 	clip = ((uint8_t *)v)[1];
 	free(v);
