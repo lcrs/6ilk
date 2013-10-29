@@ -1,0 +1,2 @@
+On Ubuntu 13.04, this should get what you need:
+	sudo apt-get install libavformat-dev libavcodec-dev libiec61883-dev mesa-common-dev
