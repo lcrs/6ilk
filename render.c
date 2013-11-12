@@ -25,9 +25,9 @@ void renderStatDraw(double ns) {
 	}
 	/* If higher than it should be, colour it red*/
 	if(ns > 41000000) {
-		glColor3f(1.0, 0.0, 0.0);
+		glColor3f(0.3, 0.1, 0.1);
 	} else {
-		glColor3f(0.2, 0.2, 0.2);
+		glColor3f(0.1, 0.1, 0.1);
 	}
 	
 	/* Draw the bar */
@@ -49,9 +49,9 @@ void renderStatSwap(double ns) {
 	}
 	/* If higher than it should be, colour it red*/
 	if(ns > 41000000) {
-		glColor3f(1.0, 0.0, 0.0);
+		glColor3f(0.3, 0.1, 0.1);
 	} else {
-		glColor3f(0.2, 0.2, 0.2);
+		glColor3f(0.1, 0.1, 0.1);
 	}
 	
 	/* Draw */
