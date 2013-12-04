@@ -12,11 +12,12 @@ The interface is a little wild x
 Building
 ========
 On Ubuntu 13.04, this should get what you need:
-	sudo apt-get install libavformat-dev libavcodec-dev libiec61883-dev mesa-common-dev
+
+    sudo apt-get install libavformat-dev libavcodec-dev libiec61883-dev mesa-common-dev
 
 Todo
 ====
-o Scrolling on edges is broken under WindowMaker because of the window border... bodged it by moving the window left and up a pixel
-o Whiteness on the grid when you stop sampling
-o You have to pass the path to the clips folder as argv[1] with a trailing /
-o Using absolute-mode Wacom means scrolling past end of clip doesn't wrap like it does with a mouse
+* Scrolling on edges is broken under WindowMaker because of the window border... bodged it by moving the window left and up a pixel
+* Whiteness on the grid when you stop sampling
+* You have to pass the path to the clips folder as argv[1] with a trailing /
+* Using absolute-mode Wacom means scrolling past end of clip doesn't wrap like it does with a mouse
