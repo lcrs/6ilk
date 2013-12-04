@@ -2,8 +2,8 @@ CC = gcc -c -g
 LD = gcc
 LIBS = -lpthread -lGL -lX11 -lavformat -lavcodec -lavutil -lz -lrt -liec61883 -lraw1394 -lm
 
-silk: main.o gui.o events.o thumbs.o draw.o grid.o clips.o decode.o render.o channels.o anim.o sampler.o
-	$(LD) main.o gui.o events.o thumbs.o draw.o grid.o clips.o decode.o render.o channels.o anim.o sampler.o $(LIBS) -o silk
+6ilk: main.o gui.o events.o thumbs.o draw.o grid.o clips.o decode.o render.o channels.o anim.o sampler.o
+	$(LD) main.o gui.o events.o thumbs.o draw.o grid.o clips.o decode.o render.o channels.o anim.o sampler.o $(LIBS) -o 6ilk
 
 main.o: main.h main.c
 	$(CC) main.c -o main.o
@@ -31,4 +31,4 @@ sampler.o: main.h sampler.c
 	$(CC) sampler.c -o sampler.o
 
 clean:
-	rm *.o silk
+	rm *.o 6ilk

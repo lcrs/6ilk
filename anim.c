@@ -16,7 +16,7 @@ void tap(void) {
 	/* check if time since last tap is ridiculous */
 	if(delta > 2.0) {
 		/* start of a new sequence - zero all times and do nothing*/
-		/* printf("silk: starting new tap sequence\n"); */
+		/* printf("6ilk: starting new tap sequence\n"); */
 		for(i = 0; i < 8; i++) {
 			state.taps[i] = 0.0;
 		}
@@ -42,7 +42,7 @@ void tap(void) {
 
 		state.tempo = total / (double)count;
 		
-		/* printf("silk: tempo = %f\n", 60.0 / state.tempo); */
+		/* printf("6ilk: tempo = %f\n", 60.0 / state.tempo); */
 		
 		/* set new speeds for all clips */
 		for(i = 0; i < 3; i++) {

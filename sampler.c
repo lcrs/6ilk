@@ -244,7 +244,7 @@ void samplerClick(XButtonEvent *e) {
 	
 	if(samplerOverMonitor(state.overSub)) {
 		/* Mouse is over input monitor, start recording */
-		/* Generate sensible filename - sampler/silksampleXXX.dv where XXX is a zero padded integer */
+		/* Generate sensible filename - sampler/6ilksampleXXX.dv where XXX is a zero padded integer */
 		
 		/* Get last file in folder */
 		folder = &globals.folders[state.currentFolder];
@@ -260,10 +260,10 @@ void samplerClick(XButtonEvent *e) {
 		}
 				
 		/* Create a new filename with the digits one higher */
-		state.sampler.path = malloc(strlen(globals.rootPath) + strlen(folder->name) + strlen("/silksample") + 3 + strlen(".dv"));
+		state.sampler.path = malloc(strlen(globals.rootPath) + strlen(folder->name) + strlen("/6ilksample") + 3 + strlen(".dv"));
 		strcpy(state.sampler.path, globals.rootPath);
 		strcat(state.sampler.path, folder->name);
-		strcat(state.sampler.path, "/silksample");
+		strcat(state.sampler.path, "/6ilksample");
 		
 		digits = malloc(3 + 1);
 		sprintf(digits, "%03d", new);

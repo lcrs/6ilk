@@ -115,7 +115,7 @@ void decode(void *v) {
 		} else {
 			/* We can only properly seek to keyframes... might be okay for looping but not for speed changes */
 			/* Do nothing for now */
-			printf("silk decode: ignoring seek for inter-frame codec\n");
+			printf("6ilk decode: ignoring seek for inter-frame codec\n");
 		}
 		
 		do {
