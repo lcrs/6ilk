@@ -73,7 +73,7 @@ void decode(void *v) {
 	frame = avcodec_alloc_frame();
 	av_init_packet(&packet);
 			
-	pthread_cleanup_push((void *)avformat_close_input, (void *)fctx);
+	pthread_cleanup_push((void *)avformat_close_input, (void *)&fctx);
 	pthread_cleanup_push((void *)avcodec_close, (void *)cctx);
 	pthread_cleanup_push((void *)av_free, (void *)frame);
 	
