@@ -1,0 +1,11 @@
+6ilk
+====
+
+Started this in I guess 2003, and picked it up again in 2013 to make it work on modern Linux.
+
+It records DV from a firewire camera, whilst also playing and mixing three streams of existing DV captures. Used it at a festival one time feeding a vision mixer and a couple projectors.
+
+No big deal these days but I learnt a whole pile about threading, X11, fragment shaders and the ffmpeg APIs.
+
+The interface is a little wild x
+
